@@ -49,11 +49,8 @@ export class NappInputSelect extends React.Component<NappInputSelectProps, {}> {
         return null;
     }
 
-
-
     render() {
         let icon = this.props.Icon || false;
-
         return <div className="field">
             <label className="label">{this.props.Label}</label>
             <div className={`control ${this.controlClass}`}>
