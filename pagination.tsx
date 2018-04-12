@@ -13,12 +13,6 @@ export interface PNappPaginationProps {
 
 export class NappPagination extends React.Component<PNappPaginationProps, {}> {
 
-    // @Input('paging-page') private _page: number = 1;
-    // @Input('paging-total') private _total: number;
-    // @Input('paging-max') private _max: number = 8;
-    // @Input('paging-limit') private _limit: number = 10;
-    // @Output('paging-on-change-page') onChance = new EventEmitter();
-
     get page() {
         return this.props.page || 0;
     }

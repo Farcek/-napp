@@ -3,10 +3,8 @@ import { NappPagination, PNappPaginationProps } from "./pagination";
 
 
 export interface PNappTableColumn<T> {
-
     key?: string
     title?: string
-
     align?: 'center' | 'right'
     size?: string
     render?: (row: T, i: number, array: T[]) => React.ReactNode
@@ -18,14 +16,21 @@ export interface PNappTableAction {
     url?: string
     type?: string
 }
+
+export interface PNappTableQuery {
+    qurl?: string
+    qname?: string
+    qvalue?: string
+}
 export interface PNappTable<T> {
+    columns: PNappTableColumn<T>[]
     items: T[]
 
     paging?: PNappPaginationProps
 
     actions?: PNappTableAction[]
 
-    columns: PNappTableColumn<T>[]
+    query?: PNappTableQuery
 
 }
 
@@ -36,10 +41,29 @@ export class NappTable<T> extends React.Component<PNappTable<T>, {}> {
         let paging = this.props.paging;
         let items = this.props.items;
         let actions = this.props.actions;
+        let query = this.props.query;
         return <div>
             <div className="level">
                 <div className="level-left">
-
+                    {query
+                        ? <form action={query.qurl || ''} method="get"  >
+                            <div className="field  has-addons">
+                                <p className="control is-expanded">
+                                    <input className="input" type="text" placeholder="Гарчигаар хайх .." name={query.qname || 'q'} defaultValue={query.qvalue || ''} />
+                                </p>
+                                {query.qvalue
+                                    ? <p className="control">
+                                        <a type="submit" className="button is-danger" href={query.qurl || '?'}><span className="icon"><i className="fa fa-close" /></span> </a>
+                                    </p>
+                                    : null
+                                }
+                                <p className="control">
+                                    <button type="submit" className="button is-info"><span className="icon"><i className="fa fa-search" /></span> </button>
+                                </p>
+                            </div>
+                        </form>
+                        : null
+                    }
                 </div>
                 {actions && actions.length
                     ? <div className="level-right">
@@ -87,19 +111,22 @@ export class NappTable<T> extends React.Component<PNappTable<T>, {}> {
                         : null
                     }
                 </tbody>
-                <tfoot>
-                    {paging
-                        ? <tr><td colSpan={columns.length}>
-                            <NappPagination
-                                total={paging.total}
-                                limit={paging.limit}
-                                page={paging.page}
-                                uri={paging.uri}
-                            />
-                        </td></tr>
-                        : null
-                    }
-                </tfoot>
+                {paging && paging.total
+                    ? <tfoot>
+                        {paging
+                            ? <tr><td colSpan={columns.length}>
+                                <NappPagination
+                                    total={paging.total}
+                                    limit={paging.limit}
+                                    page={paging.page}
+                                    uri={paging.uri}
+                                />
+                            </td></tr>
+                            : null
+                        }
+                    </tfoot>
+                    : null
+                }
             </table>
         </div>
     }
